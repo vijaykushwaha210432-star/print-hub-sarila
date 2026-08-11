@@ -1,0 +1,19 @@
+<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRINT HUB SARILA</title><link rel="stylesheet" href="style.css"></head><body>
+<header><div class="brand">PRINT HUB <span>SARILA</span></div><p>आपकी सोच, हमारी प्रिंटिंग</p><small>हमीरपुर की शान, सरीला की पहचान</small></header>
+<main><h1>अपनी पसंद का Printing Order करें</h1><p class="center">Product चुनें → Design लगाएँ → Details भरें → WhatsApp भेजें</p>
+<div class="products">
+<button data-p="T-Shirt">👕<b>T-Shirt</b><small>Custom Printing</small></button><button data-p="Mug">☕<b>Mug</b><small>Photo / Design</small></button>
+<button data-p="Cap">🧢<b>Cap</b><small>Custom Printing</small></button><button data-p="Photo">🖼️<b>Photo</b><small>Photo Printing</small></button>
+<button data-p="Visiting Card">💳<b>Visiting Card</b><small>Business Printing</small></button><button data-p="Flex / Banner">🪧<b>Flex / Banner</b><small>Shop & Event</small></button>
+</div>
+<section id="order" class="card hidden"><div class="head"><h2 id="title">Order</h2><button id="clear">✕ Clear</button></div>
+<div id="shirt" class="opts hidden"><label>T-Shirt Type<select id="shirtType"><option>Round Neck</option><option>Polo</option></select></label><label>Colour<select id="shirtColour"><option>Black</option><option>White</option><option>Red</option></select></label><label>Size<select id="shirtSize"><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></select></label><label>Printing<select id="shirtPrint"><option>Front</option><option>Back</option><option>Front + Back</option></select></label></div>
+<div id="generic" class="opts"></div>
+<label>Photo / Design Upload<input id="design" type="file" accept="image/*"></label><p id="fileName" class="hint">कोई file नहीं चुनी गई</p>
+<label>Quantity<div class="qty"><button id="minus">−</button><input id="qty" type="number" min="1" value="1"><button id="plus">+</button></div></label>
+<label>आपका नाम<input id="customer" placeholder="नाम"></label><label>Mobile Number<input id="mobile" inputmode="numeric" maxlength="10" placeholder="10 अंकों का नंबर"></label>
+<label>Extra जानकारी / Design instruction<textarea id="note" placeholder="जैसे: logo ऊपर लगाना है"></textarea></label>
+<div class="preview"><b>Order Preview</b><div id="preview">Product चुनें।</div></div>
+<button id="send" class="wa">📲 WhatsApp पर Order भेजें</button><p class="hint">Price अभी website पर नहीं दिखाया जा रहा।</p></section>
+<section class="card"><h2>कैसे Order करें?</h2><div class="steps"><div>1️⃣ Product चुनें</div><div>2️⃣ Design लगाएँ</div><div>3️⃣ Details भरें</div><div>4️⃣ WhatsApp भेजें</div></div></section></main>
+<footer><b>PRINT HUB SARILA</b><div>Sarila, Hamirpur, U.P.</div><div>WhatsApp: +91 6388250630</div></footer><script src="script.js"></script></body></html>
