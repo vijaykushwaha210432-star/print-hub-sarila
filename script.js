@@ -2,29 +2,25 @@ const WA="916388250630";let product="";
 const order=document.getElementById("order"),shirt=document.getElementById("shirt"),generic=document.getElementById("generic"),preview=document.getElementById("preview");
 const templates={Mug:'<label>Mug Type<select id="mugType"><option>White Mug</option><option>Magic Mug</option></select></label>',Cap:'<label>Cap Colour<select id="capColour"><option>Black</option><option>White</option><option>Red</option><option>Blue</option></select></label>',Photo:'<label>Photo Size<select id="photoSize"><option>4×6 inch</option><option>6×8 inch</option><option>8×12 inch</option><option>Other</option></select></label>',"Visiting Card":'<label>Printing<select id="cardPrint"><option>Single Side</option><option>Double Side</option></select></label>',"Flex / Banner":'<label>Width (feet)<input id="flexW" type="number" min="1"></label><label>Height (feet)<input id="flexH" type="number" min="1"></label>'};
 document.querySelectorAll(".products button").forEach(b=>b.onclick=()=>{product=b.dataset.p;document.getElementById("title").textContent=product+" Order";order.classList.remove("hidden");shirt.classList.toggle("hidden",product!=="T-Shirt");generic.innerHTML=product==="T-Shirt"?"":(templates[product]||"");order.scrollIntoView({behavior:"smooth"});update()});
-function update(){if(!product)return;let s="<b>"+product+"</b><br>Quantity: "+qty.value+"<br>Customer: "+(customer.value||"—");if(product==="T-Shirt")s+="<br>"+shirtType.value+" | "+shirtColour.value+" | "+shirtSize.value+" | "+shirtPrint.value;let f=design.files[0];s+="<br>Design: "+(f?f.name:"नहीं लगाया");preview.innerHTML=s}
+function update(){if(!product)return;let s="<b>"+product+"</b><br>Package: "+((document.getElementById("tier")||{}).value||"Standard")+"<br>Quantity: "+qty.value+"<br>Customer: "+(customer.value||"—");if(product==="T-Shirt")s+="<br>"+shirtType.value+" | "+shirtColour.value+" | "+shirtSize.value+" | "+shirtPrint.value;let f=design.files[0];s+="<br>Design: "+(f?f.name:"नहीं लगाया");preview.innerHTML=s}
 minus.onclick=()=>{qty.value=Math.max(1,+qty.value-1);update()};plus.onclick=()=>{qty.value=+qty.value+1;update()};design.onchange=()=>{fileName.textContent=design.files[0]?"Selected: "+design.files[0].name:"कोई file नहीं चुनी गई";update()};["qty","customer","shirtType","shirtColour","shirtSize","shirtPrint"].forEach(id=>document.getElementById(id).addEventListener("input",update));clear.onclick=()=>location.reload();
 send.onclick=()=>{let n=customer.value.trim(),m=mobile.value.trim();if(!product)return alert("Product चुनें।");if(!n)return alert("नाम भरें।");if(!/^[0-9]{10}$/.test(m))return alert("10 अंकों का सही Mobile Number डालें।");let msg="🛍️ *NEW ORDER - PRINT HUB SARILA*\n\n👤 Customer: "+n+"\n📱 Mobile: "+m+"\n📦 Product: "+product+"\n🔢 Quantity: "+qty.value;if(product==="T-Shirt")msg+="\n👕 Type: "+shirtType.value+"\n🎨 Colour: "+shirtColour.value+"\n📏 Size: "+shirtSize.value+"\n🖨️ Printing: "+shirtPrint.value;if(product==="Mug")msg+="\n☕ Mug Type: "+mugType.value;if(product==="Cap")msg+="\n🧢 Colour: "+capColour.value;if(product==="Photo")msg+="\n🖼️ Size: "+photoSize.value;if(product==="Visiting Card")msg+="\n💳 Side: "+cardPrint.value;if(product==="Flex / Banner")msg+="\n📐 Size: "+(flexW.value||"—")+" ft × "+(flexH.value||"—")+" ft";msg+="\n🖼️ Design: "+(design.files[0]?design.files[0].name:"नहीं लगाया")+"\n📝 Extra: "+(note.value.trim()||"कोई नहीं")+"\n\nकृपया Order देखकर Price और Ready Time बता दें।";window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(msg),"_blank")};
-// --- PRINT HUB SARILA V2: price, discount, GST and order number ---
-const PH_PRICES={"T-Shirt":0,"Mug":0,"Cap":0,"Photo":0,"Visiting Card":0,"Flex / Banner":0};
-const PH_orderNo="PH-"+String(Date.now()).slice(-6);
-const PH_itemTotal=document.getElementById("itemTotal"),PH_finalTotal=document.getElementById("finalTotal"),
-PH_discount=document.getElementById("discount"),PH_gst=document.getElementById("gst"),PH_payment=document.getElementById("payment");
-document.getElementById("orderNo").textContent=PH_orderNo;
+
+const PRICES={"T-Shirt":{"Basic":249,"Standard":299,"Premium":399},"Mug":{"Basic":149,"Standard":199,"Premium":249},"Cap":{"Basic":199,"Standard":249,"Premium":299},"Photo":{"Basic":20,"Standard":40,"Premium":80},"Visiting Card":{"Basic":199,"Standard":299,"Premium":499},"Flex / Banner":{"Basic":60,"Standard":80,"Premium":100}};
+const phNo="PH-"+String(Date.now()).slice(-6);
+document.getElementById("orderNo").textContent=phNo;
 function phCalc(){
- if(!product)return {qty:1,base:0,discount:0,gst:0,total:0};
- const q=Math.max(1,Number(document.getElementById("qty").value)||1);
- const base=(PH_PRICES[product]||0)*q;
- const d=Math.min(100,Math.max(0,Number(PH_discount.value)||0));
- const g=Math.min(28,Math.max(0,Number(PH_gst.value)||0));
- const after=base-base*d/100,total=after+after*g/100;
- PH_itemTotal.textContent="₹"+base.toFixed(2); PH_finalTotal.textContent="₹"+total.toFixed(2);
- return {qty:q,base,discount:d,gst:g,total};
+ if(!product)return {q:1,base:0,d:0,g:0,total:0};
+ const q=Math.max(1,+qty.value||1);
+ const tierEl=document.getElementById("tier");
+ const tier=tierEl?tierEl.value:"Standard";
+ const price=PRICES[product]?PRICES[product][tier]:0;
+ const base=price*q;
+ const d=Math.min(100,Math.max(0,+discount.value||0)),g=Math.min(28,Math.max(0,+gst.value||0));
+ const after=base*(1-d/100),total=after*(1+g/100);
+ itemTotal.textContent="₹"+base.toFixed(2);finalTotal.textContent="₹"+total.toFixed(2);
+ return {q,base,d,g,total};
 }
-[PH_discount,PH_gst].forEach(e=>e.addEventListener("input",phCalc));
-const phOldSend=document.getElementById("send");
-phOldSend.addEventListener("click",()=>{
- const c=phCalc();
- if(!product || !customer.value.trim() || !/^[0-9]{10}$/.test(mobile.value.trim())) return;
- setTimeout(()=>{},0);
-});
+[discount,gst].forEach(x=>x.addEventListener("input",phCalc));
+
+const tier=document.getElementById("tier"); if(tier) tier.addEventListener("change",update);
